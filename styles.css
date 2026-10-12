@@ -4074,3 +4074,113 @@ body[class^="page-"] [data-reveal].in{
   transform:none !important;
   transition:none !important;
 }
+
+/* ===== Footer: 2 columnas (pegar AL FINAL de styles.css) =====
+   Izquierda: Sobre ARKHA + Hablemos (apilados)
+   Derecha:   Contacto (ubicaciones) */
+
+.foot-grid{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:48px;
+  align-items:start;
+}
+.foot-grid > *{ min-width:0; }
+
+.foot-col-left{
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+
+.foot-grid h4{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 0 16px;
+  min-height:20px;
+  line-height:1.2;
+}
+.foot-grid h4 svg{ flex:none; }
+.foot-grid p{ margin:0 0 16px; line-height:1.55; }
+
+.foot-grid .row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 0 8px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.foot-grid .row .ico{ flex:none; width:1.4em; text-align:center; }
+
+.foot-loc{ margin-bottom:20px; }
+.foot-loc:last-child{ margin-bottom:0; }
+.foot-loc-label{
+  display:block;
+  margin-bottom:8px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#c9a06a;
+}
+
+.foot-cta{ display:flex; flex-direction:column; align-items:flex-start; }
+.foot-cta .btn-wa{ margin-top:4px; }
+
+/* Mobile: 1 columna (Sobre ARKHA → Hablemos → Contacto) */
+@media (max-width:760px){
+  .foot-grid{ grid-template-columns:1fr; gap:32px; }
+  .foot-cta .btn-wa{ width:100%; justify-content:center; }
+}
+/* ===== Footer: Hablemos arriba de Sobre ARKHA + ubicaciones en diagonal ===== */
+
+/* Orden de la columna izquierda (aplica en desktop y móvil) */
+footer .foot-col-left{
+  display:flex;
+  flex-direction:column;
+  gap:36px;
+}
+footer .foot-col-left .foot-cta{ order:1; }
+footer .foot-col-left .foot-brand{ order:2; }
+
+/* Desktop / tablet ancha */
+@media (min-width:821px){
+  /* el selector largo es necesario para ganarle a las reglas body.page-xxx */
+  body[class^="page-"] footer .foot-grid{
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);
+    column-gap:clamp(48px,7vw,110px);
+    align-items:start;
+  }
+
+  footer .foot-cta{
+    width:100%;
+    max-width:430px;
+  }
+  footer .foot-brand p{ max-width:380px; }
+
+  /* Columna derecha: ubicaciones escalonadas */
+  footer .foot-contact{
+    display:flex;
+    flex-direction:column;
+    gap:44px;
+  }
+  footer .foot-contact > h4{ margin-bottom:0; }
+
+  footer .foot-contact .foot-loc{
+    width:min(100%,380px);
+    margin:0;
+  }
+  /* 1ª ubicación (CDMX): arriba a la izquierda */
+  footer .foot-contact .foot-loc:nth-of-type(1){ align-self:flex-start; }
+  /* 2ª ubicación (Puebla): abajo a la derecha → efecto diagonal */
+footer .foot-contact .foot-loc:nth-of-type(2){ align-self:flex-start; }  /* correo: de regreso a la izquierda */
+  footer .foot-contact .foot-loc:nth-of-type(3){ align-self:flex-start; }
+
+  footer .foot-contact .row span:not(.ico){
+    flex:1;
+    min-width:0;
+    overflow-wrap:normal;
+  }
+}
