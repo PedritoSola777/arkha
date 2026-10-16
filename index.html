@@ -14,6 +14,74 @@
   <link href="arkha-logo2.png" rel="shortcut icon" type="image/x-icon" />
 
   <link href="styles.css" rel="stylesheet" />
+
+  <!-- ESTILOS DEL CARRUSEL DE REMODELACIONES -->
+  <style>
+    .rem-section { padding: 80px 0 90px; position: relative; overflow: hidden; }
+    .rem-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; }
+    .rem-head h2 { margin: 8px 0 0; }
+    .rem-controls { display: flex; gap: 10px; }
+    .rem-btn {
+      width: 48px; height: 48px; border: 1px solid rgba(201,160,106,.55); background: transparent;
+      color: #c9a06a; font-size: 20px; cursor: pointer; transition: all .3s ease; display: grid; place-items: center;
+    }
+    .rem-btn:hover { background: #c9a06a; color: #111; transform: translateY(-2px); }
+
+    .rem-viewport { overflow: hidden; }
+    .rem-track { display: flex; gap: 22px; transition: transform .9s cubic-bezier(.65,.05,.25,1); will-change: transform; touch-action: pan-y; }
+
+    .rem-slide {
+      --per-view: 3;
+      flex: 0 0 calc((100% - (var(--per-view) - 1) * 22px) / var(--per-view));
+      position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #1a1a1a;
+      opacity: .45; transform: scale(.94); filter: saturate(.7);
+      transition: opacity .8s ease, transform .8s ease, filter .8s ease;
+    }
+    .rem-slide.is-visible { opacity: 1; transform: scale(1); filter: saturate(1); }
+
+    .rem-slide img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transform: scale(1.02); transition: transform 7s ease-out;
+    }
+    .rem-slide.is-visible img { transform: scale(1.12); }
+
+    /* Mismo tratamiento de color en todas para que "coincidan" */
+    .rem-slide::before {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(20,16,10,.10) 0%, rgba(20,16,10,.15) 45%, rgba(12,10,7,.88) 100%);
+    }
+    .rem-slide::after {
+      content: ""; position: absolute; inset: 12px; z-index: 2; pointer-events: none;
+      border: 1px solid rgba(201,160,106,.45); transition: inset .5s ease, border-color .5s ease;
+    }
+    .rem-slide:hover::after { inset: 18px; border-color: #c9a06a; }
+
+    .rem-cap {
+      position: absolute; left: 26px; right: 26px; bottom: 26px; z-index: 3; color: #fff;
+      transform: translateY(14px); opacity: 0; transition: transform .7s ease .2s, opacity .7s ease .2s;
+    }
+    .rem-slide.is-visible .rem-cap { transform: translateY(0); opacity: 1; }
+    .rem-code { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .14em; color: #c9a06a; margin-bottom: 8px; }
+    .rem-cap h3 { font-family: 'Archivo Expanded', sans-serif; font-size: 19px; margin: 0 0 6px; line-height: 1.15; }
+    .rem-cap p { font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; margin: 0; opacity: .85; line-height: 1.4; }
+
+    .rem-foot { display: flex; align-items: center; gap: 22px; margin-top: 30px; }
+    .rem-progress { flex: 1; height: 2px; background: rgba(201,160,106,.25); overflow: hidden; }
+    .rem-progress span { display: block; height: 100%; width: 0; background: #c9a06a; }
+    .rem-progress span.run { animation: remBar 5s linear forwards; }
+    @keyframes remBar { from { width: 0 } to { width: 100% } }
+    .rem-count { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #c9a06a; letter-spacing: .1em; min-width: 64px; text-align: right; }
+
+    @media (max-width: 960px) { .rem-slide { --per-view: 2; } }
+    @media (max-width: 600px) {
+      .rem-slide { --per-view: 1; aspect-ratio: 4 / 4.6; }
+      .rem-section { padding: 60px 0 70px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rem-track, .rem-slide, .rem-slide img, .rem-cap { transition: none !important; }
+      .rem-progress span.run { animation: none; }
+    }
+  </style>
 </head>
 
 <body class="page-index">
@@ -29,7 +97,7 @@
         <div class="brand-name">ARKHA<small>INGENIERÍA Y CONSTRUCCIÓN</small></div>
       </a>
       <nav class="links">
-        <a href="index.html">Inicio</a>
+        <a class="active" href="index.html">Inicio</a>
         <a href="servicios.html">Servicios</a>
         <a href="proyectos.html">Proyectos</a>
         <a href="talento.html">Capital humano</a>
@@ -227,6 +295,57 @@
         </div>
       </div>
     </section>
+
+    <!-- CARRUSEL DE REMODELACIONES -->
+    <section class="rem-section" id="remodelaciones" aria-label="Galería de remodelaciones">
+      <div class="wrap">
+        <div class="rem-head">
+          <div>
+            <div class="tag">REMODELACIONES</div>
+            <h2>Espacios que <em>vuelven a nacer</em></h2>
+          </div>
+          <div class="rem-controls">
+            <button class="rem-btn" id="remPrev" type="button" aria-label="Anterior">←</button>
+            <button class="rem-btn" id="remNext" type="button" aria-label="Siguiente">→</button>
+          </div>
+        </div>
+
+        <div class="rem-viewport" id="remViewport">
+          <div class="rem-track" id="remTrack">
+            <article class="rem-slide">
+              <img alt="Remodelación de cocina" loading="lazy" src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-01 / COCINA</div><h3>Cocinas funcionales</h3><p>Muros, instalaciones y acabados renovados.</p></div>
+            </article>
+            <article class="rem-slide">
+              <img alt="Remodelación de baño" loading="lazy" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-02 / BAÑOS</div><h3>Baños completos</h3><p>Loseta, muebles sanitarios e hidráulica nueva.</p></div>
+            </article>
+            <article class="rem-slide">
+              <img alt="Fachadas y exteriores" loading="lazy" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-03 / FACHADAS</div><h3>Fachadas y exteriores</h3><p>Aplanados, pintura e impermeabilización.</p></div>
+            </article>
+            <article class="rem-slide">
+              <img alt="Pintura y acabados" loading="lazy" src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-04 / PINTURA</div><h3>Pintura y acabados</h3><p>Muros y plafones con terminado uniforme.</p></div>
+            </article>
+            <article class="rem-slide">
+              <img alt="Cancelería y ventanas" loading="lazy" src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-05 / CANCELERÍA</div><h3>Puertas y ventanas</h3><p>Cancelería a medida para cada espacio.</p></div>
+            </article>
+            <article class="rem-slide">
+              <img alt="Remodelación en proceso" loading="lazy" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900&amp;q=80" />
+              <div class="rem-cap"><div class="rem-code">REM-06 / OBRA</div><h3>Remodelación integral</h3><p>De la demolición al acabado, un solo responsable.</p></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="rem-foot">
+          <div class="rem-progress"><span id="remBar"></span></div>
+          <div class="rem-count" id="remCount">01 / 06</div>
+        </div>
+      </div>
+    </section>
+
     <!-- VALUES -->
     <section id="valores">
       <div class="wrap">
@@ -386,6 +505,76 @@ $&
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') setFabOpen(false);
     });
+  </script>
+
+  <!-- SCRIPT DEL CARRUSEL DE REMODELACIONES -->
+  <script>
+    (function () {
+      const DELAY = 5000;                       // tiempo entre movimientos (ms)
+      const track = document.getElementById('remTrack');
+      const viewport = document.getElementById('remViewport');
+      const bar = document.getElementById('remBar');
+      const count = document.getElementById('remCount');
+      const section = document.getElementById('remodelaciones');
+      let slides = Array.from(track.children);
+      let idx = 0, timer = null, paused = false;
+
+      // Si una imagen falla, se quita para no dejar huecos
+      slides.forEach(s => s.querySelector('img').addEventListener('error', () => {
+        s.remove(); slides = Array.from(track.children); update();
+      }));
+
+      const perView = () => parseInt(getComputedStyle(slides[0]).getPropertyValue('--per-view')) || 1;
+      const maxIdx = () => Math.max(0, slides.length - perView());
+      const pad = n => String(n).padStart(2, '0');
+
+      function update() {
+        if (!slides.length) return;
+        const pv = perView();
+        idx = Math.min(idx, maxIdx());
+        const gap = 22;
+        const w = slides[0].offsetWidth;
+        track.style.transform = `translateX(${-idx * (w + gap)}px)`;
+        slides.forEach((s, i) => s.classList.toggle('is-visible', i >= idx && i < idx + pv));
+        count.textContent = `${pad(idx + 1)} / ${pad(maxIdx() + 1)}`;
+        restartBar();
+      }
+
+      function restartBar() {
+        bar.classList.remove('run'); void bar.offsetWidth;
+        bar.style.animationDuration = DELAY + 'ms';
+        if (!paused) bar.classList.add('run');
+      }
+
+      function go(n) { idx = n > maxIdx() ? 0 : n < 0 ? maxIdx() : n; update(); schedule(); }
+      function schedule() { clearTimeout(timer); if (!paused) timer = setTimeout(() => go(idx + 1), DELAY); }
+
+      document.getElementById('remNext').addEventListener('click', () => go(idx + 1));
+      document.getElementById('remPrev').addEventListener('click', () => go(idx - 1));
+
+      // Pausa al pasar el mouse
+      viewport.addEventListener('mouseenter', () => { paused = true; clearTimeout(timer); bar.classList.remove('run'); });
+      viewport.addEventListener('mouseleave', () => { paused = false; update(); schedule(); });
+
+      // Swipe en móvil
+      let x0 = null;
+      viewport.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0;
+        if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1));
+        x0 = null;
+      });
+
+      // Solo corre cuando la sección está visible
+      new IntersectionObserver(([en]) => {
+        paused = !en.isIntersecting;
+        if (paused) { clearTimeout(timer); bar.classList.remove('run'); } else { update(); schedule(); }
+      }, { threshold: 0.2 }).observe(section);
+
+      window.addEventListener('resize', update);
+      update(); schedule();
+    })();
   </script>
 </body>
 

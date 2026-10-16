@@ -261,6 +261,12 @@ body.page-index nav.links a{font-family:var(--mono);
     transition:border-color .2s, color .2s;
     white-space:nowrap;}
 body.page-index nav.links a:hover{border-color:var(--orange); color:var(--orange);}
+/* Hover y página activa */
+body.page-index nav.links a:hover,
+body.page-index nav.links a.active {
+    color: var(--orange);
+    border-bottom: 1px solid var(--orange);
+}
 body.page-index .btn-wa{font-family:var(--mono); font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
     background:var(--ink); color:var(--paper); padding:10px 16px; display:inline-flex; align-items:center; gap:8px;
     transition:background .2s; white-space:nowrap; flex:none;}
@@ -4183,4 +4189,17 @@ footer .foot-contact .foot-loc:nth-of-type(2){ align-self:flex-start; }  /* corr
     min-width:0;
     overflow-wrap:normal;
   }
+}
+
+/* Página activa en el menú de navegación */
+nav.links a.active,
+.page-index nav.links a[href="index.html"] {
+    color: #c9a06a;
+}
+
+/* Indicador inferior de página activa */
+nav.links a.active::after,
+.page-index nav.links a[href="index.html"]::after {
+    width: 100%;
+    opacity: 1;
 }
