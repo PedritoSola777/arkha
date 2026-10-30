@@ -49,7 +49,7 @@
         <p class="page-sub">Notas, guías y novedades sobre construcción, remodelación y proyectos de vivienda, directo
           desde nuestro equipo en obra.</p>
         <div class="page-meta">
-          <span>12 artículos publicados</span>
+          <span>14 artículos publicados</span>
           <span>Actualizado cada semana</span>
         </div>
       </div>
@@ -63,6 +63,26 @@
           <p class="lead inline-blog-1">Notas, guías y novedades sobre construcción y remodelación.</p>
         </div>
         <div class="blog-grid">
+          <a class="blog-card" data-reveal="" href="leer-planos-proyecto.html">
+            <img alt="Cómo leer los planos de tu proyecto antes de aprobarlos" class="blog-card-img"
+              src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&amp;q=70" />
+            <div class="blog-card-body">
+              <!-- <div class="blog-meta"><span>Planeación</span><span>26 AGO 2026</span></div> -->
+              <h3>Cómo leer los planos de tu proyecto antes de aprobarlos</h3>
+              <p>Qué revisar en planos, cortes y especificaciones para detectar errores antes de que se conviertan en obra.</p>
+              <span class="blog-read">Leer más →</span>
+            </div>
+          </a>
+          <a class="blog-card" data-reveal="" href="humedad-en-muros.html">
+            <img alt="Humedad en muros: cómo identificar el origen antes de resanar" class="blog-card-img"
+              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&amp;q=70" />
+            <div class="blog-card-body">
+              <!-- <div class="blog-meta"><span>Mantenimiento</span><span>19 AGO 2026</span></div> -->
+              <h3>Humedad en muros: cómo identificar el origen antes de resanar</h3>
+              <p>Pintar encima no resuelve nada: aprende a distinguir si la humedad viene de una fuga, de la lluvia o del suelo.</p>
+              <span class="blog-read">Leer más →</span>
+            </div>
+          </a>
           <a class="blog-card" data-reveal="" href="infonavit-remodelacion.html">
             <img alt="Cómo usar tu crédito Infonavit para remodelar" class="blog-card-img"
               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&amp;q=70" />
@@ -285,6 +305,21 @@ $&
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: 0.1 });
     els.forEach(el => io.observe(el));
+
+    // Rellena la última fila del grid: la última tarjeta ocupa las columnas sobrantes
+    function fillBlogGrid() {
+      const grid = document.querySelector('.blog-grid');
+      if (!grid) return;
+      const cards = grid.querySelectorAll('.blog-card');
+      if (!cards.length) return;
+      const last = cards[cards.length - 1];
+      last.style.gridColumn = '';
+      const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      const rem = cards.length % cols;
+      if (cols > 1 && rem !== 0) last.style.gridColumn = 'span ' + (cols - rem + 1);
+    }
+    fillBlogGrid();
+    window.addEventListener('resize', fillBlogGrid);
   </script>
   <script>
     (function () {
